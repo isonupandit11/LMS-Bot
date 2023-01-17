@@ -1,4 +1,4 @@
-const { prompt } = require("./prompt");
+const { readLineAsync } = require("./prompt");
 const { viewer } = require("./viewer");
 
 const syllabus = async (page) => {
@@ -11,11 +11,17 @@ const syllabus = async (page) => {
         "6: ADBMS(Practical)"
     ];
     let subject;
-    subject = prompt(`Select a subject:\n${subjects.join("\n")}\n\nEnter:`);
-    //use while loop to check if the subject is valid
-    while (!subjects.map((s) => s.split(":")[0]).includes(subject)) {
-        subject = prompt(`Invalid subject, please select a subject:\n${subjects.join("\n")}\n\nEnter:`);
+
+    async function getPrompt(message) {
+        var promptInput = await readLineAsync(message);
+        if (!subjects.find(x => x.startsWith(promptInput))) {
+            console.log("Invalid input, Please enter a valid subject number");
+            return await getPrompt(message);
+        }
+        return promptInput;
     }
+
+    subject = await getPrompt(`Select a subject:\n${subjects.join("\n")}\n\nEnter:`);
 
     switch (subject) {
         case "1":
@@ -47,7 +53,6 @@ const syllabus = async (page) => {
         const frame = await iframe.contentFrame();
         if (frame.url() === "https://cdn.lcs.brightspace.com/widgets/visual_toc/index.html") {
             contentFrame = frame;
-            console.log("Found the correct frame");
             break;
         }
     }
@@ -65,7 +70,9 @@ const syllabus = async (page) => {
         for (const url of uncompleteUnits) {
             await page.goto(url, { waitUntil: "networkidle2" });
             let isVimeo = false;
+            await new Promise((r) => setTimeout(r, 3000));
             const framess = await page.frames();
+            await new Promise((r) => setTimeout(r, 2000));
             for (let i = 0; i < framess.length; i++) {
                 //check if the frame url contains vimeo
                 if (framess[i].url().includes("https://player.vimeo.com/video/")) {

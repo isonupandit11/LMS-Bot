@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 const { authenticate } = require("./authenticate");
 const { syllabus } = require("./syllabus");
-const { prompt } = require("./prompt");
+const { readLineAsync } = require("./prompt");
 const fs = require("fs");
 
 const start = async () => {
@@ -20,25 +20,26 @@ const start = async () => {
         process.exit(0);
     }
     const config = JSON.parse(fs.readFileSync("./config.json"));
-    let headless;
-    do {
-        headless = prompt("Do you want browser to run in background? (y/n) [y]: ") || "y";
-        switch (headless) {
-            case "y":
-                headless = true;
-                break;
-            case "n":
-                headless = false;
-                break;
-            default:
-                console.log("Invalid input, please enter 'y' or 'n'");
+
+    let headless = async () => {
+        let input = await readLineAsync("Do you want to run the browser in background? (y/n) [y]:");
+        if (input === "y" || input === "Y" || input === "") {
+            return true;
+        } else if (input === "n" || input === "N") {
+            return false;
+        } else {
+            console.log("Invalid input, Please enter 'y' or 'n'");
+            return await headless();
         }
-    } while (headless === undefined);
+    }
+    headless = await headless();
+
+
     console.log(`Browser will run in background: ${headless}`);
 
     const browser = await puppeteer.launch({
         //uncomment this to use chrome from the path
-        // executablePath: "C:/Program Files/Google/Chrome/Application/chrome.exe",
+        executablePath: "C:/Program Files/Google/Chrome/Application/chrome.exe",
         headless: headless, // default is true
         ignoreDefaultArgs: ["--enable-automation"],
         defaultViewport: null, //Defaults to an 800x600 viewport
