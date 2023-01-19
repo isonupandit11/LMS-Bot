@@ -1,8 +1,14 @@
-const puppeteer = require("puppeteer");
+// const puppeteer = require("puppeteer");
 const { authenticate } = require("./authenticate");
 const { syllabus } = require("./syllabus");
 const { readLineAsync } = require("./prompt");
 const fs = require("fs");
+// Any number of plugins can be added through `puppeteer.use()`
+const puppeteer = require('puppeteer-extra')
+
+// Add stealth plugin and use defaults (all tricks to hide puppeteer usage)
+const StealthPlugin = require('puppeteer-extra-plugin-stealth')
+puppeteer.use(StealthPlugin({ stealth: true }))
 
 const start = async () => {
     try {

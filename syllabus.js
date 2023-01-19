@@ -50,10 +50,14 @@ const syllabus = async (page) => {
     const iframes = await page.$$("iframe");
     let contentFrame;
     for (const iframe of iframes) {
-        const frame = await iframe.contentFrame();
-        if (frame.url() === "https://cdn.lcs.brightspace.com/widgets/visual_toc/index.html") {
-            contentFrame = frame;
-            break;
+        try {
+            const frame = await iframe.contentFrame();
+            if (frame.url() === "https://cdn.lcs.brightspace.com/widgets/visual_toc/index.html") {
+                contentFrame = frame;
+                break;
+            }
+        } catch (e) {
+            console.log("Error: ", e);
         }
     }
     if (contentFrame) {
@@ -68,7 +72,12 @@ const syllabus = async (page) => {
         });
         console.log(`Total uncomplete units: ${uncompleteUnits.length}`);
         for (const url of uncompleteUnits) {
-            await page.goto(url, { waitUntil: "networkidle2" });
+            try {
+                await page.goto(url, { waitUntil: "networkidle2" });
+
+            } catch (e) {
+                console.log("Error: ", e);
+            }
             let isVimeo = false;
             await new Promise((r) => setTimeout(r, 3000));
             const framess = await page.frames();
