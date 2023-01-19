@@ -21,9 +21,38 @@ Using npm and Node, you can install and run LMS-Bot:
 
 3. Run the program:
 
-`node main.js`
+`node index.js`
 
-## Built With
+## Features
 
-* [Node.js](https://nodejs.org/en/)
-* [Puppeteer](https://github.com/GoogleChrome/puppeteer)
+* Automates Learning Management Systems (LMS)
+* Ability to select for which subject you want to increase watch time
+* Option to run the browser in headless mode 
+
+## Prerequisites
+
+* [Node](https://nodejs.org/en/)
+* [NPM](https://www.npmjs.com/get-npm)
+
+## Installation 
+
+1. Install the dependencies:
+
+`npm install`
+
+2. Add email and password credentials to the config.json file:
+
+```
+{
+  "email": "<ENTER EMAIL ADDRESS HERE>",
+  "password": "<ENTER PASSWORD HERE>"
+}
+```
+
+3. Run the program:
+
+`node main.js` 
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
