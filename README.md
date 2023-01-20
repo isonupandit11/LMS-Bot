@@ -36,9 +36,6 @@ Using npm and Node, you can install and run LMS-Bot:
 
 `node main.js`
 
-3. Run the program:
-
-`node main.js` 
 
 ## License
 
