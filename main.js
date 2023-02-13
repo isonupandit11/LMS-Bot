@@ -8,6 +8,7 @@ const puppeteer = require('puppeteer-extra')
 
 // Add stealth plugin and use defaults (all tricks to hide puppeteer usage)
 const StealthPlugin = require('puppeteer-extra-plugin-stealth')
+
 puppeteer.use(StealthPlugin({ stealth: true }))
 
 const start = async () => {
@@ -39,7 +40,6 @@ const start = async () => {
         }
     }
     headless = await headless();
-
 
     console.log(`Browser will run in background: ${headless}`);
 
@@ -85,7 +85,7 @@ const start = async () => {
     const { email, password } = config;
 
     if (await authenticate(page, email, password)) {
-        await syllabus(page);
+        await syllabus(page, browser);
     } else {
         console.log("exiting program");
         process.exit(0);
